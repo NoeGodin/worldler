@@ -355,8 +355,7 @@ class CountryControllerTest extends AbstractTestBase {
     }
 
     @AfterEach
-    void tearDown(TestInfo testInfo) {
-        logTestDuration(testInfo);
+    void tearDown() {
         reset(countryService);
     }
 }

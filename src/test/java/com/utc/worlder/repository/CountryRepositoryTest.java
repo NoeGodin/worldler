@@ -273,9 +273,4 @@ class CountryRepositoryTest extends AbstractTestBase {
             assertThat(countryRepository.count()).isEqualTo(initialCount - 1);
         }
     }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        logTestDuration(testInfo);
-    }
 }

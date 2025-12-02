@@ -1,6 +1,7 @@
 package com.utc.worlder.config;
 
 import com.utc.worlder.entity.Country;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ public abstract class AbstractTestBase {
             testInfo.getTestClass().map(Class::getSimpleName).orElse("Unknown"));
     }
 
+    @AfterEach
     protected void logTestDuration(TestInfo testInfo) {
         Duration duration = Duration.between(testStartTime, Instant.now());
         logger.info("✅ Test {} completed in {} ms",
