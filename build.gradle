@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 group = 'com.utc'
@@ -51,6 +52,14 @@ tasks.named('test') {
         exceptionFormat "full"
         showStandardStreams false
     }
+}
+
+pitest {
+    junit5PluginVersion = '1.2.1'
+    targetClasses = ['com.utc.worlder.*']
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
 }
 
 jacocoTestReport {
