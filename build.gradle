@@ -41,6 +41,16 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    
+    // More details in logs
+    testLogging {
+        events "passed", "failed", "skipped", "standardOut", "standardError"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        exceptionFormat "full"
+        showStandardStreams false
+    }
 }
 
 jacocoTestReport {
