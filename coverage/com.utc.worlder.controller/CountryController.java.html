@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CountryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">worlder</a> &gt; <a href="index.source.html" class="el_package">com.utc.worlder.controller</a> &gt; <span class="el_source">CountryController.java</span></div><h1>CountryController.java</h1><pre class="source lang-java linenums">package com.utc.worlder.controller;
+
+import com.utc.worlder.entity.Country;
+import com.utc.worlder.service.CountryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping(&quot;/api/countries&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class CountryController {
+    
+    private final CountryService countryService;
+    
+    @Autowired
+<span class="fc" id="L21">    public CountryController(CountryService countryService) {</span>
+<span class="fc" id="L22">        this.countryService = countryService;</span>
+<span class="fc" id="L23">    }</span>
+    
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Country&gt;&gt; getAllCountries() {
+<span class="fc" id="L27">        List&lt;Country&gt; countries = countryService.getAllCountries();</span>
+<span class="fc" id="L28">        return ResponseEntity.ok(countries);</span>
+    }
+    
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Country&gt; getCountryById(@PathVariable Long id) {
+<span class="fc" id="L33">        Optional&lt;Country&gt; country = countryService.getCountryById(id);</span>
+<span class="fc" id="L34">        return country.map(ResponseEntity::ok)</span>
+<span class="fc" id="L35">                     .orElse(ResponseEntity.notFound().build());</span>
+    }
+    
+    @GetMapping(&quot;/name/{name}&quot;)
+    public ResponseEntity&lt;Country&gt; getCountryByName(@PathVariable String name) {
+<span class="fc" id="L40">        Optional&lt;Country&gt; country = countryService.getCountryByName(name);</span>
+<span class="fc" id="L41">        return country.map(ResponseEntity::ok)</span>
+<span class="fc" id="L42">                     .orElse(ResponseEntity.notFound().build());</span>
+    }
+    
+    @GetMapping(&quot;/code/{isoCode}&quot;)
+    public ResponseEntity&lt;Country&gt; getCountryByIsoCode(@PathVariable String isoCode) {
+<span class="nc" id="L47">        Optional&lt;Country&gt; country = countryService.getCountryByIsoCode(isoCode);</span>
+<span class="nc" id="L48">        return country.map(ResponseEntity::ok)</span>
+<span class="nc" id="L49">                     .orElse(ResponseEntity.notFound().build());</span>
+    }
+    
+    @GetMapping(&quot;/continent/{continent}&quot;)
+    public ResponseEntity&lt;List&lt;Country&gt;&gt; getCountriesByContinent(@PathVariable String continent) {
+<span class="fc" id="L54">        List&lt;Country&gt; countries = countryService.getCountriesByContinent(continent);</span>
+<span class="fc" id="L55">        return ResponseEntity.ok(countries);</span>
+    }
+    
+    @GetMapping(&quot;/population/min/{minPopulation}&quot;)
+    public ResponseEntity&lt;List&lt;Country&gt;&gt; getCountriesWithMinPopulation(@PathVariable Long minPopulation) {
+<span class="fc" id="L60">        List&lt;Country&gt; countries = countryService.getCountriesWithPopulationGreaterThan(minPopulation);</span>
+<span class="fc" id="L61">        return ResponseEntity.ok(countries);</span>
+    }
+    
+    @GetMapping(&quot;/area/min/{minArea}&quot;)
+    public ResponseEntity&lt;List&lt;Country&gt;&gt; getCountriesWithMinArea(@PathVariable Double minArea) {
+<span class="fc" id="L66">        List&lt;Country&gt; countries = countryService.getCountriesWithAreaGreaterThan(minArea);</span>
+<span class="fc" id="L67">        return ResponseEntity.ok(countries);</span>
+    }
+    
+    @GetMapping(&quot;/continents&quot;)
+    public ResponseEntity&lt;List&lt;String&gt;&gt; getAllContinents() {
+<span class="fc" id="L72">        List&lt;String&gt; continents = countryService.getAllContinents();</span>
+<span class="fc" id="L73">        return ResponseEntity.ok(continents);</span>
+    }
+    
+    @GetMapping(&quot;/count&quot;)
+    public ResponseEntity&lt;Long&gt; getTotalCountriesCount() {
+<span class="fc" id="L78">        long count = countryService.getTotalCountriesCount();</span>
+<span class="fc" id="L79">        return ResponseEntity.ok(count);</span>
+    }
+    
+    @PostMapping
+    public ResponseEntity&lt;Country&gt; createCountry(@RequestBody Country country) {
+        try {
+<span class="fc" id="L85">            Country savedCountry = countryService.saveCountry(country);</span>
+<span class="fc" id="L86">            return new ResponseEntity&lt;&gt;(savedCountry, HttpStatus.CREATED);</span>
+<span class="fc" id="L87">        } catch (Exception e) {</span>
+<span class="fc" id="L88">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+    
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Country&gt; updateCountry(@PathVariable Long id, @RequestBody Country country) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (!countryService.existsById(id)) {</span>
+<span class="fc" id="L95">            return ResponseEntity.notFound().build();</span>
+        }
+        
+<span class="fc" id="L98">        country.setId(id);</span>
+<span class="fc" id="L99">        Country updatedCountry = countryService.saveCountry(country);</span>
+<span class="fc" id="L100">        return ResponseEntity.ok(updatedCountry);</span>
+    }
+    
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteCountry(@PathVariable Long id) {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (!countryService.existsById(id)) {</span>
+<span class="fc" id="L106">            return ResponseEntity.notFound().build();</span>
+        }
+        
+<span class="fc" id="L109">        countryService.deleteCountry(id);</span>
+<span class="fc" id="L110">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
